@@ -1,0 +1,145 @@
+import { useState } from 'react';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { ProductCard } from '@/components/ProductCard';
+import { mockProducts } from '@/data/mockDatabase';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Search, Filter, Package, Wheat, ShieldCheck } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const ProductsPage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'food' | 'seed'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'genuine' | 'suspicious' | 'fake'>('all');
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+
+  const filteredProducts = mockProducts.filter(product => {
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          product.manufacturer.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+    const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
+    const matchesVerified = !verifiedOnly || product.isAdminVerified;
+    
+    return matchesSearch && matchesCategory && matchesStatus && matchesVerified;
+  });
+
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+      
+      <main className="flex-1 py-8 md:py-12">
+        <div className="container mx-auto px-4">
+          {/* Page Header */}
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
+              <ShieldCheck className="w-4 h-4" />
+              <span className="text-sm font-medium">Verified Products</span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-3">
+              Product Database
+            </h1>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Browse our database of verified and reviewed products. 
+              Admin-verified products are marked with higher trust scores.
+            </p>
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-col md:flex-row gap-4 mb-8">
+            {/* Search */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search products or manufacturers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            {/* Category Filter */}
+            <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v as typeof categoryFilter)}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="food">
+                  <div className="flex items-center gap-2">
+                    <Package className="w-4 h-4" />
+                    Food Products
+                  </div>
+                </SelectItem>
+                <SelectItem value="seed">
+                  <div className="flex items-center gap-2">
+                    <Wheat className="w-4 h-4" />
+                    Seeds
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            
+            {/* Status Filter */}
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="genuine">Genuine</SelectItem>
+                <SelectItem value="suspicious">Suspicious</SelectItem>
+                <SelectItem value="fake">Fake</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            {/* Admin Verified Toggle */}
+            <Button
+              variant={verifiedOnly ? "default" : "outline"}
+              onClick={() => setVerifiedOnly(!verifiedOnly)}
+              className="shrink-0"
+            >
+              <ShieldCheck className="w-4 h-4 mr-2" />
+              Admin Verified
+            </Button>
+          </div>
+
+          {/* Results Count */}
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-sm text-muted-foreground">
+              Showing {filteredProducts.length} products
+            </p>
+          </div>
+
+          {/* Products Grid */}
+          {filteredProducts.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Filter className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">No products found</h3>
+              <p className="text-muted-foreground">
+                Try adjusting your filters or search query.
+              </p>
+            </div>
+          )}
+        </div>
+      </main>
+      
+      <Footer />
+    </div>
+  );
+};
+
+export default ProductsPage;
