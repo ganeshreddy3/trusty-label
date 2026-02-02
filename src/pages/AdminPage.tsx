@@ -4,6 +4,7 @@ import { Footer } from '@/components/Footer';
 import { TrustScore } from '@/components/TrustScore';
 import { StatusBadge } from '@/components/StatusBadge';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
+import { AddProductDialog } from '@/components/AddProductDialog';
 import { mockProducts, mockReports, blacklistedBrands } from '@/data/mockDatabase';
 import { Product, FakeReport, ProductStatus } from '@/types/product';
 import { Button } from '@/components/ui/button';
@@ -47,7 +48,7 @@ import {
   Package,
   FileWarning,
   Ban,
-  Eye,
+  Plus,
   Edit
 } from 'lucide-react';
 
@@ -57,9 +58,18 @@ const AdminPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editStatus, setEditStatus] = useState<ProductStatus>('pending');
   const [editTrustScore, setEditTrustScore] = useState(50);
   const { toast } = useToast();
+
+  const handleAddProduct = (product: Product) => {
+    setProducts(prev => [product, ...prev]);
+    toast({
+      title: "Product added",
+      description: `${product.name} has been added to the verification database.`
+    });
+  };
 
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -217,14 +227,20 @@ const AdminPage = () => {
                         Review, verify, and manage product authenticity status.
                       </CardDescription>
                     </div>
-                    <div className="relative w-full md:w-64">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search products..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10"
-                      />
+                    <div className="flex items-center gap-3">
+                      <Button onClick={() => setAddDialogOpen(true)}>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Product
+                      </Button>
+                      <div className="relative w-full md:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search products..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
                     </div>
                   </div>
                 </CardHeader>
@@ -400,6 +416,13 @@ const AdminPage = () => {
       </main>
       
       <Footer />
+
+      {/* Add Product Dialog */}
+      <AddProductDialog
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
+        onAdd={handleAddProduct}
+      />
 
       {/* Edit Product Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>

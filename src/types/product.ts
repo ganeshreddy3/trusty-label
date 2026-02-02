@@ -8,7 +8,7 @@ export interface Product {
   category: 'food' | 'seed';
   licenseNumber: string;
   batchNumber: string;
-  expiryDate: string;
+  licenseDate: string;
   certificationNumber?: string;
   imageUrl?: string;
   trustScore: number;
@@ -25,7 +25,7 @@ export interface ExtractedDetails {
   licenseNumber?: string;
   manufacturer?: string;
   batchNumber?: string;
-  expiryDate?: string;
+  licenseDate?: string;
   certificationNumber?: string;
   productName?: string;
   ingredients?: string[];
