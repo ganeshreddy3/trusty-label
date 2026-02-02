@@ -131,12 +131,12 @@ export function VerificationResults({ result, details, onReport, onReset }: Veri
               </div>
             )}
             
-            {details.expiryDate && (
+            {details.licenseDate && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
                 <Calendar className="w-5 h-5 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Expiry Date</p>
-                  <p className="font-medium">{details.expiryDate}</p>
+                  <p className="text-xs text-muted-foreground">License Date</p>
+                  <p className="font-medium">{details.licenseDate}</p>
                 </div>
               </div>
             )}

@@ -55,10 +55,10 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
               <VerifiedBadge isAdminVerified={product.isAdminVerified} size="sm" />
             </div>
             
-            {product.expiryDate && (
+            {product.licenseDate && (
               <div className="flex items-center gap-1.5 mt-3 text-xs text-muted-foreground">
                 <Calendar className="w-3.5 h-3.5" />
-                <span>Expires: {product.expiryDate}</span>
+                <span>License: {product.licenseDate}</span>
               </div>
             )}
           </div>

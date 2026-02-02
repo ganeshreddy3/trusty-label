@@ -20,7 +20,7 @@ export function simulateOCR(imageFile: File): Promise<ExtractedDetails> {
           licenseNumber: "10020021000123",
           manufacturer: "Organic Foods India Pvt Ltd",
           batchNumber: "BATCH2024A001",
-          expiryDate: "2025-12-31",
+          licenseDate: "2024-01-15",
           productName: "Organic Basmati Rice",
           ingredients: ["100% Organic Basmati Rice"],
           netWeight: "5 kg",
@@ -30,7 +30,7 @@ export function simulateOCR(imageFile: File): Promise<ExtractedDetails> {
           licenseNumber: "10020021000456",
           manufacturer: "Fresh Harvest Foods",
           batchNumber: "WHT2024B045",
-          expiryDate: "2025-06-30",
+          licenseDate: "2024-02-20",
           productName: "Premium Wheat Flour",
           ingredients: ["Whole Wheat", "Fortified with Iron and Folic Acid"],
           netWeight: "10 kg",
@@ -40,14 +40,14 @@ export function simulateOCR(imageFile: File): Promise<ExtractedDetails> {
           certificationNumber: "SEED/2024/KA/001234",
           manufacturer: "Karnataka State Seeds Corporation",
           batchNumber: "SEED2024K789",
-          expiryDate: "2025-04-30",
+          licenseDate: "2024-03-01",
           productName: "Sona Masuri Paddy Seeds"
         },
         {
           licenseNumber: "INVALID12345",
           manufacturer: "Unknown Company",
           batchNumber: "FAKE001",
-          expiryDate: "2023-01-01",
+          licenseDate: "2022-01-01",
           productName: "Suspicious Product"
         }
       ];
@@ -196,33 +196,38 @@ export function verifyProduct(details: ExtractedDetails): VerificationResult {
     }
   }
 
-  // Check Expiry Date
-  if (details.expiryDate) {
+  // Check License Date
+  if (details.licenseDate) {
     maxScore += 20;
-    const expiry = new Date(details.expiryDate);
+    const licenseDate = new Date(details.licenseDate);
     const today = new Date();
+    const daysSinceLicense = Math.floor((today.getTime() - licenseDate.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (expiry > today) {
-      const daysUntilExpiry = Math.floor((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (daysSinceLicense <= 365) {
       totalScore += 20;
       checks.push({
-        name: "Expiry Date",
+        name: "License Date",
         passed: true,
-        message: `Product expires in ${daysUntilExpiry} days`,
+        message: `License issued ${daysSinceLicense} days ago`,
         severity: "info"
       });
-      
-      if (daysUntilExpiry < 30) {
-        recommendations.push("Product is nearing expiry. Consider purchasing fresher stock.");
-      }
+    } else if (daysSinceLicense <= 730) {
+      totalScore += 10;
+      checks.push({
+        name: "License Date",
+        passed: true,
+        message: `License issued ${Math.floor(daysSinceLicense / 365)} year(s) ago`,
+        severity: "warning"
+      });
+      recommendations.push("License is over a year old. Consider verifying renewal status.");
     } else {
       checks.push({
-        name: "Expiry Date",
+        name: "License Date",
         passed: false,
-        message: "Product has expired",
+        message: "License is outdated (over 2 years old)",
         severity: "error"
       });
-      warnings.push("EXPIRED: Do not consume or use this product!");
+      warnings.push("WARNING: License date is very old. Verify if license has been renewed.");
     }
   }
 
