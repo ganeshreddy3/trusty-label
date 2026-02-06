@@ -5,11 +5,9 @@ export interface Product {
   id: string;
   name: string;
   manufacturer: string;
-  category: 'food' | 'seed';
   licenseNumber: string;
   batchNumber: string;
   licenseDate: string;
-  certificationNumber?: string;
   imageUrl?: string;
   trustScore: number;
   status: ProductStatus;
@@ -26,7 +24,6 @@ export interface ExtractedDetails {
   manufacturer?: string;
   batchNumber?: string;
   licenseDate?: string;
-  certificationNumber?: string;
   productName?: string;
   ingredients?: string[];
   netWeight?: string;
@@ -61,25 +58,10 @@ export interface FakeReport {
   reviewedBy?: string;
 }
 
-export interface MockDatabase {
-  fssaiLicenses: FSSAILicense[];
-  seedCertifications: SeedCertification[];
-  blacklistedBrands: string[];
-}
-
 export interface FSSAILicense {
   licenseNumber: string;
   companyName: string;
   address: string;
-  validUntil: string;
-  status: 'active' | 'expired' | 'revoked';
-}
-
-export interface SeedCertification {
-  certificationNumber: string;
-  seedType: string;
-  variety: string;
-  producer: string;
   validUntil: string;
   status: 'active' | 'expired' | 'revoked';
 }

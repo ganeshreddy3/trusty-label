@@ -53,7 +53,6 @@ export function VerificationResults({ result, details, onReport, onReset }: Veri
         )}>
           <div className="flex flex-col md:flex-row items-center gap-6">
             <TrustScore score={result.trustScore} size="lg" />
-            
             <div className="flex-1 text-center md:text-left">
               <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
                 <h3 className="text-2xl font-display font-bold text-foreground">
@@ -62,9 +61,9 @@ export function VerificationResults({ result, details, onReport, onReset }: Veri
                 <StatusBadge status={result.status} size="lg" />
               </div>
               <p className="text-muted-foreground">
-                {result.status === 'genuine' && "This product has passed our verification checks."}
-                {result.status === 'suspicious' && "This product requires further investigation."}
-                {result.status === 'fake' && "This product failed verification. Do not purchase."}
+                {result.status === 'genuine' && "This food product has passed our FSSAI verification checks."}
+                {result.status === 'suspicious' && "This food product requires further investigation."}
+                {result.status === 'fake' && "This food product failed FSSAI verification. Do not purchase."}
               </p>
             </div>
           </div>
@@ -90,7 +89,6 @@ export function VerificationResults({ result, details, onReport, onReset }: Veri
                 </div>
               </div>
             )}
-            
             {details.manufacturer && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
                 <Building2 className="w-5 h-5 text-muted-foreground mt-0.5" />
@@ -100,7 +98,6 @@ export function VerificationResults({ result, details, onReport, onReset }: Veri
                 </div>
               </div>
             )}
-            
             {details.licenseNumber && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
                 <ShieldCheck className="w-5 h-5 text-muted-foreground mt-0.5" />
@@ -110,17 +107,6 @@ export function VerificationResults({ result, details, onReport, onReset }: Veri
                 </div>
               </div>
             )}
-            
-            {details.certificationNumber && (
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                <ShieldCheck className="w-5 h-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <p className="text-xs text-muted-foreground">Seed Certification</p>
-                  <p className="font-medium font-mono">{details.certificationNumber}</p>
-                </div>
-              </div>
-            )}
-            
             {details.batchNumber && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
                 <Hash className="w-5 h-5 text-muted-foreground mt-0.5" />
@@ -130,7 +116,6 @@ export function VerificationResults({ result, details, onReport, onReset }: Veri
                 </div>
               </div>
             )}
-            
             {details.licenseDate && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
                 <Calendar className="w-5 h-5 text-muted-foreground mt-0.5" />
@@ -177,9 +162,7 @@ export function VerificationResults({ result, details, onReport, onReset }: Veri
                   <span className={cn(
                     "text-xs font-medium",
                     check.severity === 'warning' ? "text-warning" : "text-danger"
-                  )}>
-                    FAILED
-                  </span>
+                  )}>FAILED</span>
                 )}
               </div>
             ))}

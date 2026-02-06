@@ -3,7 +3,7 @@ import { TrustScore } from './TrustScore';
 import { StatusBadge } from './StatusBadge';
 import { VerifiedBadge } from './VerifiedBadge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Package, Wheat, Building2, Calendar } from 'lucide-react';
+import { Package, Building2, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
@@ -22,21 +22,10 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
     >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
-          {/* Icon */}
-          <div className={cn(
-            "p-3 rounded-xl shrink-0",
-            product.category === 'food' 
-              ? "bg-primary/10 text-primary" 
-              : "bg-secondary/10 text-secondary"
-          )}>
-            {product.category === 'food' ? (
-              <Package className="w-6 h-6" />
-            ) : (
-              <Wheat className="w-6 h-6" />
-            )}
+          <div className="p-3 rounded-xl shrink-0 bg-primary/10 text-primary">
+            <Package className="w-6 h-6" />
           </div>
           
-          {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-2">
               <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors">

@@ -13,7 +13,7 @@ export function Footer() {
           </div>
           
           <p className="text-sm text-muted-foreground text-center">
-            Protecting consumers and farmers through verified product authentication.
+            Protecting consumers through FSSAI-based food product authentication.
           </p>
           
           <p className="text-sm text-muted-foreground flex items-center gap-1">

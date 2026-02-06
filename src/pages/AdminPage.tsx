@@ -263,7 +263,7 @@ const AdminPage = () => {
                             <TableCell>
                               <div>
                                 <p className="font-medium">{product.name}</p>
-                                <p className="text-xs text-muted-foreground capitalize">{product.category}</p>
+                                <p className="text-xs text-muted-foreground">Food Product</p>
                               </div>
                             </TableCell>
                             <TableCell className="text-sm">{product.manufacturer}</TableCell>

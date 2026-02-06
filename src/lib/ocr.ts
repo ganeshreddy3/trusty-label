@@ -65,14 +65,12 @@ function preprocessImage(file: File): Promise<string> {
  * FSSAI numbers are 14-digit numbers, often prefixed with "FSSAI" or "Lic. No."
  */
 function extractFSSAINumber(text: string): string | undefined {
-  // Clean the text - OCR often confuses similar characters
   const cleaned = text
-    .replace(/[oO]/g, '0')  // O -> 0 in number contexts
-    .replace(/[lI|]/g, '1') // l, I, | -> 1 in number contexts
-    .replace(/[sS]/g, '5')  // S -> 5 in number contexts (only near digits)
-    .replace(/[bB]/g, '8'); // B -> 8 in number contexts
+    .replace(/[oO]/g, '0')
+    .replace(/[lI|]/g, '1')
+    .replace(/[sS]/g, '5')
+    .replace(/[bB]/g, '8');
 
-  // Pattern 1: Look for "FSSAI" keyword followed by number
   const fssaiPatterns = [
     /FSSAI\s*(?:Lic(?:ense)?\.?\s*(?:No\.?)?\s*:?\s*)?(\d[\d\s]{12,}\d)/i,
     /Lic(?:ense)?\.?\s*(?:No\.?)?\s*:?\s*(\d[\d\s]{12,}\d)/i,
@@ -90,7 +88,6 @@ function extractFSSAINumber(text: string): string | undefined {
     }
   }
 
-  // Pattern 2: Find any 14-digit number (common FSSAI format)
   const allDigitGroups = text.match(/\d[\d\s]{12,}\d/g);
   if (allDigitGroups) {
     for (const group of allDigitGroups) {
@@ -101,7 +98,6 @@ function extractFSSAINumber(text: string): string | undefined {
     }
   }
 
-  // Pattern 3: Find 10+ digit numbers that could be FSSAI
   const digitSequences = text.match(/\d{10,}/g);
   if (digitSequences) {
     for (const seq of digitSequences) {
@@ -215,15 +211,6 @@ function extractNetWeight(text: string): string | undefined {
 }
 
 /**
- * Extract seed certification number.
- */
-function extractSeedCertification(text: string): string | undefined {
-  const match = text.match(/(?:SEED|Cert(?:ification)?)\s*[\/\-]?\s*(\d{4})\s*[\/\-]\s*([A-Z]{2})\s*[\/\-]\s*(\d+)/i);
-  if (match) return `SEED/${match[1]}/${match[2]}/${match[3]}`;
-  return undefined;
-}
-
-/**
  * Extract ingredients from text.
  */
 function extractIngredients(text: string): string[] | undefined {
@@ -238,13 +225,11 @@ function extractIngredients(text: string): string[] | undefined {
 }
 
 /**
- * Run real OCR using Tesseract.js and extract product details.
+ * Run real OCR using Tesseract.js and extract food product details.
  */
 export async function performOCR(file: File): Promise<{ details: ExtractedDetails; rawText: string }> {
-  // Preprocess image for better results
   const processedImage = await preprocessImage(file);
 
-  // Run Tesseract OCR
   const result = await Tesseract.recognize(processedImage, 'eng', {
     logger: (m) => {
       if (m.status === 'recognizing text') {
@@ -256,14 +241,12 @@ export async function performOCR(file: File): Promise<{ details: ExtractedDetail
   const rawText = result.data.text;
   console.log('OCR Raw Text:', rawText);
 
-  // Extract structured details
   const details: ExtractedDetails = {
     licenseNumber: extractFSSAINumber(rawText),
     manufacturer: extractManufacturer(rawText),
     batchNumber: extractBatchNumber(rawText),
     licenseDate: extractDate(rawText),
     productName: extractProductName(rawText),
-    certificationNumber: extractSeedCertification(rawText),
     ingredients: extractIngredients(rawText),
     netWeight: extractNetWeight(rawText),
     mrp: extractMRP(rawText),
