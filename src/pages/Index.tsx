@@ -6,7 +6,6 @@ import {
   AlertTriangle, 
   ShieldCheck,
   ArrowRight,
-  Wheat,
   Package,
   Users,
   FileCheck
@@ -32,12 +31,12 @@ const Index = () => {
     {
       icon: Camera,
       title: 'Image-Based Verification',
-      description: 'Simply upload a photo of the product label and our OCR technology extracts and verifies all details.'
+      description: 'Simply upload a photo of the product label and our OCR technology extracts and verifies FSSAI details.'
     },
     {
       icon: Shield,
       title: 'Trust Score System',
-      description: 'Every product receives a trust score (0-100) based on multiple verification checks.'
+      description: 'Every food product receives a trust score (0-100) based on FSSAI license validation and multiple checks.'
     },
     {
       icon: ShieldCheck,
@@ -64,12 +63,12 @@ const Index = () => {
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
-                Verify Food & Agricultural Product Authenticity
+                Verify Food Product Authenticity with FSSAI
               </h1>
               
               <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-                Protect yourself from counterfeit products. Upload product labels and instantly verify 
-                FSSAI licenses, seed certifications, and manufacturer details.
+                Protect yourself from counterfeit food products. Upload product labels and instantly verify 
+                FSSAI licenses, manufacturer details, and batch information.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -89,7 +88,6 @@ const Index = () => {
             </div>
           </div>
           
-          {/* Decorative elements */}
           <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
         </section>
 
@@ -118,8 +116,8 @@ const Index = () => {
                 How It Works
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Our verification system uses advanced OCR technology and a comprehensive database 
-                to authenticate food products and agricultural seeds.
+                Our verification system uses advanced OCR technology and FSSAI database 
+                to authenticate food products and protect consumers.
               </p>
             </div>
             
@@ -139,7 +137,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Categories Section */}
+        {/* What We Verify Section */}
         <section className="py-16 bg-muted/50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
@@ -147,24 +145,24 @@ const Index = () => {
                 What We Verify
               </h2>
               <p className="text-muted-foreground">
-                Comprehensive verification for both food products and agricultural seeds.
+                Comprehensive FSSAI-based verification for packaged food products.
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <Card className="overflow-hidden group">
+            <div className="max-w-2xl mx-auto">
+              <Card className="overflow-hidden">
                 <div className="h-32 gradient-hero flex items-center justify-center">
                   <Package className="w-16 h-16 text-white/80" />
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">Food Products</h3>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">Food Product Authentication</h3>
                   <p className="text-muted-foreground mb-4">
-                    Verify FSSAI licenses, manufacturer details, batch numbers, and expiry dates for packaged food items.
+                    Verify FSSAI licenses, manufacturer details, batch numbers, and license dates for packaged food items.
                   </p>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-success" />
-                      <span>FSSAI License Verification</span>
+                      <span>FSSAI License Number Verification</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-success" />
@@ -172,33 +170,15 @@ const Index = () => {
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-success" />
-                      <span>Expiry Date Validation</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-              
-              <Card className="overflow-hidden group">
-                <div className="h-32 gradient-gold flex items-center justify-center">
-                  <Wheat className="w-16 h-16 text-white/80" />
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">Agricultural Seeds</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Authenticate seed certifications, verify producers, and check validity for quality seeds.
-                  </p>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-success" />
-                      <span>Seed Certification Check</span>
+                      <span>Batch Number Validation</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-success" />
-                      <span>Producer Verification</span>
+                      <span>License Date Verification</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-success" />
-                      <span>Variety & Type Validation</span>
+                      <span>Blacklisted Brand Detection</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -216,7 +196,7 @@ const Index = () => {
                   Recently Verified
                 </h2>
                 <p className="text-muted-foreground">
-                  Products that have been verified by our admin team.
+                  Food products that have been verified by our admin team.
                 </p>
               </div>
               <Button asChild variant="outline">
@@ -242,10 +222,10 @@ const Index = () => {
               <div className="relative gradient-hero p-8 md:p-12">
                 <div className="relative z-10 text-center text-white">
                   <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">
-                    Ready to Verify Your Products?
+                    Ready to Verify Your Food Products?
                   </h2>
                   <p className="text-white/80 mb-6 max-w-xl mx-auto">
-                    Start protecting yourself from counterfeit products today. 
+                    Start protecting yourself from counterfeit food products today. 
                     It's quick, easy, and free.
                   </p>
                   <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90">

@@ -6,57 +6,8 @@ import {
 } from '@/types/product';
 import { 
   validateFSSAILicense, 
-  validateSeedCertification, 
   isBlacklisted 
 } from '@/data/mockDatabase';
-
-export function simulateOCR(imageFile: File): Promise<ExtractedDetails> {
-  // Simulating OCR extraction with mock data
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Random mock data to simulate OCR results
-      const mockResults: ExtractedDetails[] = [
-        {
-          licenseNumber: "10020021000123",
-          manufacturer: "Organic Foods India Pvt Ltd",
-          batchNumber: "BATCH2024A001",
-          licenseDate: "2024-01-15",
-          productName: "Organic Basmati Rice",
-          ingredients: ["100% Organic Basmati Rice"],
-          netWeight: "5 kg",
-          mrp: "₹450"
-        },
-        {
-          licenseNumber: "10020021000456",
-          manufacturer: "Fresh Harvest Foods",
-          batchNumber: "WHT2024B045",
-          licenseDate: "2024-02-20",
-          productName: "Premium Wheat Flour",
-          ingredients: ["Whole Wheat", "Fortified with Iron and Folic Acid"],
-          netWeight: "10 kg",
-          mrp: "₹380"
-        },
-        {
-          certificationNumber: "SEED/2024/KA/001234",
-          manufacturer: "Karnataka State Seeds Corporation",
-          batchNumber: "SEED2024K789",
-          licenseDate: "2024-03-01",
-          productName: "Sona Masuri Paddy Seeds"
-        },
-        {
-          licenseNumber: "INVALID12345",
-          manufacturer: "Unknown Company",
-          batchNumber: "FAKE001",
-          licenseDate: "2022-01-01",
-          productName: "Suspicious Product"
-        }
-      ];
-      
-      const randomIndex = Math.floor(Math.random() * mockResults.length);
-      resolve(mockResults[randomIndex]);
-    }, 2000); // Simulate 2 second processing time
-  });
-}
 
 export function verifyProduct(details: ExtractedDetails): VerificationResult {
   const checks: VerificationCheck[] = [];
@@ -65,7 +16,7 @@ export function verifyProduct(details: ExtractedDetails): VerificationResult {
   const warnings: string[] = [];
   const recommendations: string[] = [];
 
-  // Check FSSAI License (for food products)
+  // Check FSSAI License
   if (details.licenseNumber) {
     maxScore += 30;
     const license = validateFSSAILicense(details.licenseNumber);
@@ -105,49 +56,6 @@ export function verifyProduct(details: ExtractedDetails): VerificationResult {
         severity: "error"
       });
       warnings.push("Could not verify FSSAI license. This product may be counterfeit.");
-    }
-  }
-
-  // Check Seed Certification (for seeds)
-  if (details.certificationNumber) {
-    maxScore += 30;
-    const cert = validateSeedCertification(details.certificationNumber);
-    
-    if (cert) {
-      if (cert.status === 'active') {
-        totalScore += 30;
-        checks.push({
-          name: "Seed Certification",
-          passed: true,
-          message: `Valid certification for ${cert.seedType} - ${cert.variety}`,
-          severity: "info"
-        });
-      } else if (cert.status === 'expired') {
-        totalScore += 10;
-        checks.push({
-          name: "Seed Certification",
-          passed: false,
-          message: `Certification expired on ${cert.validUntil}`,
-          severity: "warning"
-        });
-        warnings.push("Seed certification has expired. Germination rates may be affected.");
-      } else {
-        checks.push({
-          name: "Seed Certification",
-          passed: false,
-          message: "Certification has been revoked",
-          severity: "error"
-        });
-        warnings.push("CRITICAL: This seed certification has been revoked!");
-      }
-    } else {
-      checks.push({
-        name: "Seed Certification",
-        passed: false,
-        message: "Certification number not found in database",
-        severity: "error"
-      });
-      warnings.push("Could not verify seed certification. Seeds may be of poor quality.");
     }
   }
 
@@ -231,16 +139,16 @@ export function verifyProduct(details: ExtractedDetails): VerificationResult {
     }
   }
 
-  // Check for missing critical details
-  if (!details.licenseNumber && !details.certificationNumber) {
+  // Check for missing FSSAI license
+  if (!details.licenseNumber) {
     maxScore += 15;
     checks.push({
-      name: "Certification Missing",
+      name: "FSSAI License Missing",
       passed: false,
-      message: "No license or certification number found",
+      message: "No FSSAI license number found on the product",
       severity: "error"
     });
-    warnings.push("No verifiable certification found. Product authenticity cannot be confirmed.");
+    warnings.push("No FSSAI license found. All packaged food products in India must have a valid FSSAI license.");
   }
 
   // Calculate final trust score

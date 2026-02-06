@@ -1,4 +1,4 @@
-import { FSSAILicense, SeedCertification, Product, FakeReport } from '@/types/product';
+import { FSSAILicense, Product, FakeReport } from '@/types/product';
 
 export const fssaiLicenses: FSSAILicense[] = [
   {
@@ -38,46 +38,11 @@ export const fssaiLicenses: FSSAILicense[] = [
   }
 ];
 
-export const seedCertifications: SeedCertification[] = [
-  {
-    certificationNumber: "SEED/2024/KA/001234",
-    seedType: "Paddy",
-    variety: "Sona Masuri",
-    producer: "Karnataka State Seeds Corporation",
-    validUntil: "2026-04-30",
-    status: "active"
-  },
-  {
-    certificationNumber: "SEED/2024/MH/005678",
-    seedType: "Wheat",
-    variety: "HD-2967",
-    producer: "Maharashtra Seeds Ltd",
-    validUntil: "2025-12-31",
-    status: "active"
-  },
-  {
-    certificationNumber: "SEED/2023/AP/009012",
-    seedType: "Cotton",
-    variety: "Bt Cotton Hybrid",
-    producer: "Andhra Seeds Company",
-    validUntil: "2024-08-15",
-    status: "expired"
-  },
-  {
-    certificationNumber: "SEED/2024/PB/003456",
-    seedType: "Maize",
-    variety: "PMH-1",
-    producer: "Punjab Agri Seeds",
-    validUntil: "2027-02-28",
-    status: "active"
-  }
-];
-
 export const blacklistedBrands: string[] = [
   "FakeOrganic Foods",
-  "QuickGrow Seeds",
   "Counterfeit Naturals",
-  "Fraud Foods Inc"
+  "Fraud Foods Inc",
+  "Bogus Brands Co"
 ];
 
 export const mockProducts: Product[] = [
@@ -85,7 +50,6 @@ export const mockProducts: Product[] = [
     id: "prod-001",
     name: "Organic Basmati Rice",
     manufacturer: "Organic Foods India Pvt Ltd",
-    category: "food",
     licenseNumber: "10020021000123",
     batchNumber: "BATCH2024A001",
     licenseDate: "2024-01-15",
@@ -101,7 +65,6 @@ export const mockProducts: Product[] = [
     id: "prod-002",
     name: "Premium Wheat Flour",
     manufacturer: "Fresh Harvest Foods",
-    category: "food",
     licenseNumber: "10020021000456",
     batchNumber: "WHT2024B045",
     licenseDate: "2024-02-20",
@@ -115,13 +78,11 @@ export const mockProducts: Product[] = [
   },
   {
     id: "prod-003",
-    name: "Sona Masuri Paddy Seeds",
-    manufacturer: "Karnataka State Seeds Corporation",
-    category: "seed",
-    licenseNumber: "",
-    batchNumber: "SEED2024K789",
+    name: "Pure Mustard Oil",
+    manufacturer: "Green Valley Organics",
+    licenseNumber: "10020021001122",
+    batchNumber: "OIL2024G456",
     licenseDate: "2024-03-01",
-    certificationNumber: "SEED/2024/KA/001234",
     trustScore: 92,
     status: "genuine",
     isAdminVerified: true,
@@ -134,7 +95,6 @@ export const mockProducts: Product[] = [
     id: "prod-004",
     name: "Unknown Brand Cooking Oil",
     manufacturer: "Unknown Manufacturer",
-    category: "food",
     licenseNumber: "FAKE123456789",
     batchNumber: "XX2024001",
     licenseDate: "2023-06-15",
@@ -148,13 +108,11 @@ export const mockProducts: Product[] = [
   },
   {
     id: "prod-005",
-    name: "Hybrid Cotton Seeds",
-    manufacturer: "Andhra Seeds Company",
-    category: "seed",
-    licenseNumber: "",
-    batchNumber: "COT2024A456",
+    name: "Suspicious Spice Mix",
+    manufacturer: "Nature's Best Products",
+    licenseNumber: "10020021000789",
+    batchNumber: "SPX2024A456",
     licenseDate: "2023-08-15",
-    certificationNumber: "SEED/2023/AP/009012",
     trustScore: 45,
     status: "suspicious",
     isAdminVerified: false,
@@ -179,9 +137,9 @@ export const mockReports: FakeReport[] = [
   {
     id: "report-002",
     productId: "prod-005",
-    reportedBy: "farmer456",
-    reason: "Seeds did not germinate properly",
-    evidence: "Low germination rate of 30%",
+    reportedBy: "consumer456",
+    reason: "FSSAI number does not match product details",
+    evidence: "License appears expired, packaging looks different from original",
     status: "pending",
     createdAt: "2024-03-15"
   }
@@ -189,10 +147,6 @@ export const mockReports: FakeReport[] = [
 
 export function validateFSSAILicense(licenseNumber: string): FSSAILicense | null {
   return fssaiLicenses.find(l => l.licenseNumber === licenseNumber) || null;
-}
-
-export function validateSeedCertification(certNumber: string): SeedCertification | null {
-  return seedCertifications.find(c => c.certificationNumber === certNumber) || null;
 }
 
 export function isBlacklisted(brandName: string): boolean {
