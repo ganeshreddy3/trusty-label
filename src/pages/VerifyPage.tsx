@@ -4,31 +4,38 @@ import { Footer } from '@/components/Footer';
 import { ImageUpload } from '@/components/ImageUpload';
 import { VerificationResults } from '@/components/VerificationResults';
 import { ReportDialog } from '@/components/ReportDialog';
-import { simulateOCR, verifyProduct } from '@/lib/verification';
+import { performOCR } from '@/lib/ocr';
+import { verifyProduct } from '@/lib/verification';
 import { ExtractedDetails, VerificationResult } from '@/types/product';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Camera, CheckCircle, Zap } from 'lucide-react';
+import { Shield, Camera, CheckCircle, Zap, FileText } from 'lucide-react';
 
 const VerifyPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState('');
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [extractedDetails, setExtractedDetails] = useState<ExtractedDetails | null>(null);
+  const [rawOcrText, setRawOcrText] = useState<string | null>(null);
   const [showReportDialog, setShowReportDialog] = useState(false);
 
   const handleImageSelect = async (file: File) => {
     setIsProcessing(true);
     setResult(null);
+    setRawOcrText(null);
+    setOcrProgress('Preprocessing image...');
     
     try {
-      // Simulate OCR extraction
-      const details = await simulateOCR(file);
+      setOcrProgress('Running OCR - detecting text...');
+      const { details, rawText } = await performOCR(file);
       setExtractedDetails(details);
+      setRawOcrText(rawText);
       
-      // Verify the extracted details
+      setOcrProgress('Verifying product details...');
       const verificationResult = verifyProduct(details);
       setResult(verificationResult);
     } catch (error) {
       console.error('Verification failed:', error);
+      setOcrProgress('OCR failed. Please try with a clearer image.');
     } finally {
       setIsProcessing(false);
     }
@@ -37,6 +44,8 @@ const VerifyPage = () => {
   const handleReset = () => {
     setResult(null);
     setExtractedDetails(null);
+    setRawOcrText(null);
+    setOcrProgress('');
   };
 
   const steps = [
@@ -48,7 +57,7 @@ const VerifyPage = () => {
     {
       icon: Zap,
       title: 'OCR Analysis',
-      description: 'We extract text and details automatically'
+      description: 'Tesseract OCR extracts text & numbers'
     },
     {
       icon: CheckCircle,
@@ -74,7 +83,7 @@ const VerifyPage = () => {
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Upload an image of your product's back label to verify its authenticity. 
-              Our system will analyze FSSAI licenses, certifications, and manufacturer details.
+              Our OCR system will detect FSSAI licenses, certifications, and manufacturer details.
             </p>
           </div>
 
@@ -102,7 +111,7 @@ const VerifyPage = () => {
                 <CardTitle>Upload Product Label</CardTitle>
                 <CardDescription>
                   Upload a clear image of the product's back side showing FSSAI license, 
-                  batch number, and other details.
+                  batch number, and other details. Ensure numbers are clearly visible.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -110,6 +119,28 @@ const VerifyPage = () => {
                   onImageSelect={handleImageSelect} 
                   isProcessing={isProcessing}
                 />
+                {isProcessing && ocrProgress && (
+                  <p className="text-center text-sm text-primary mt-4 animate-pulse">
+                    {ocrProgress}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Raw OCR Text (debug/transparency) */}
+          {rawOcrText && result && (
+            <Card className="max-w-2xl mx-auto mb-6 mt-6">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <FileText className="w-4 h-4 text-primary" />
+                  OCR Extracted Text
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <pre className="text-xs bg-muted p-4 rounded-lg overflow-x-auto whitespace-pre-wrap font-mono text-muted-foreground max-h-48 overflow-y-auto">
+                  {rawOcrText}
+                </pre>
               </CardContent>
             </Card>
           )}
